@@ -1,0 +1,47 @@
+{
+  "header": {
+    "title": "Plant",
+    "addPlant": "Добавить растение"
+  },
+
+  "empty": "У вас пока нет растений",
+
+  "form": {
+    "addTitle": "Новое растение",
+    "editTitle": "Редактирование",
+    "icon": "Иконка",
+    "name": "Название",
+    "namePlaceholder": "Например, Монстера",
+    "lastWatered": "Дата последнего полива",
+    "interval": "Период полива (дней)",
+    "save": "Сохранить",
+    "cancel": "Отмена"
+  },
+
+  "card": {
+    "waterEvery_one": "Полив раз в {{count}} день",
+    "waterEvery_few": "Полив раз в {{count}} дня",
+    "waterEvery_many": "Полив раз в {{count}} дней",
+    "waterEvery_other": "Полив раз в {{count}} дня",
+    "shouldHaveWatered": "Нужно было полить",
+    "nextWatering": "Следующий полив",
+    "wateringNow": "Полить сейчас",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "confirmDelete": "Удалить «{{name}}»?"
+  },
+  
+  "when": {
+    "today": "сегодня",
+    "tomorrow": "завтра",
+    "yesterday": "вчера",
+    "inDays_one": "через {{count}} день",
+    "inDays_few": "через {{count}} дня",
+    "inDays_many": "через {{count}} дней",
+    "inDays_other": "через {{count}} дня",
+    "daysAgo_one": "{{count}} день назад",
+    "daysAgo_few": "{{count}} дня назад",
+    "daysAgo_many": "{{count}} дней назад",
+    "daysAgo_other": "{{count}} дня назад"
+  }
+}

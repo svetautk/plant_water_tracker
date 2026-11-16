@@ -1,0 +1,41 @@
+{
+  "header": {
+    "title": "Plant",
+    "addPlant": "Add plant"
+  },
+
+  "empty": "You don't have any plants yet",
+
+  "form": {
+    "addTitle": "Add plant",
+    "editTitle": "Edit plant",
+    "icon": "Icon",
+    "name": "Name",
+    "namePlaceholder": "e.g. Monstera",
+    "lastWatered": "Last watered",
+    "interval": "Watering period (days)",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+
+  "card": {
+    "waterEvery_one": "Water every day",
+    "waterEvery_other": "Water every {{count}} days",
+    "shouldHaveWatered": "Should have watered",
+    "nextWatering": "Next watering",
+    "wateringNow": "Water now",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Delete \"{{name}}\"?"
+  },
+
+  "when": {
+    "today": "today",
+    "tomorrow": "tomorrow",
+    "yesterday": "yesterday",
+    "inDays_one": "in {{count}} day",
+    "inDays_other": "in {{count}} days",
+    "daysAgo_one": "{{count}} day ago",
+    "daysAgo_other": "{{count}} days ago"
+  }
+}
