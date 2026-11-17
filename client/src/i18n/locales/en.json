@@ -26,7 +26,8 @@
     "wateringNow": "Water now",
     "edit": "Edit",
     "delete": "Delete",
-    "confirmDelete": "Delete \"{{name}}\"?"
+    "confirmTitle": "Delete plant?",
+    "confirmText": "“{{name}}” will be deleted permanently."
   },
 
   "when": {

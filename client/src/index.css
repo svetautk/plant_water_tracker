@@ -70,8 +70,10 @@ input {
 
 /* Кнопка добавления: фиксированная минимальная ширина, чтобы не прыгала при смене языка */
 .header__add {
-  min-width: 150px;
+  width: 150px;
   justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* ---------- Основная область ---------- */
@@ -122,6 +124,11 @@ input {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+}
+
+.card__actions {
+  display: flex;
+  gap: 4px;
 }
 
 .card__name {
@@ -317,6 +324,26 @@ input {
   background: var(--ok-bg);
 }
 
+/* Окно подтверждения обычной модалки */
+.modal--small {
+  max-width: 380px;
+}
+
+.confirm__text {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.btn--danger {
+  background: var(--overdue-fg);
+  color: #fff;
+}
+
+.btn--danger:hover {
+  background: #8c4430;
+}
+
 /* ---------- Мобильные ---------- */
 @media (max-width: 640px) {
   .grid {
@@ -332,7 +359,8 @@ input {
   }
 
   .header__add {
-    min-width: 0;
+    width: auto; 
+    padding: 10px;
   }
 
   .main {

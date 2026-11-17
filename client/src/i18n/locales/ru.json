@@ -1,7 +1,7 @@
 {
   "header": {
     "title": "Plant",
-    "addPlant": "Добавить растение"
+    "addPlant": "Добавить"
   },
 
   "empty": "У вас пока нет растений",
@@ -28,7 +28,8 @@
     "wateringNow": "Полить сейчас",
     "edit": "Редактировать",
     "delete": "Удалить",
-    "confirmDelete": "Удалить «{{name}}»?"
+    "confirmTitle": "Удалить растение?",
+    "confirmText": "Растение «{{name}}» будет удалено навсегда."
   },
   
   "when": {
