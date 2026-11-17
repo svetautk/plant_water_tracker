@@ -18,3 +18,9 @@ export const getWateringInfo = (plant: Plant) => {
   const state: WateringState = diff < 0 ? 'overdue' : diff === 0 ? 'today' : 'ok';
   return { state, diff };
 };
+
+export const sortPlants = (plants: Plant[]): Plant[] => {
+  return plants.map((plant) => ({ plant, diff: getWateringInfo(plant).diff }))
+    .sort((a, b) => a.diff - b.diff || a.plant.name.localeCompare(b.plant.name))
+    .map(({ plant }) => plant);
+};

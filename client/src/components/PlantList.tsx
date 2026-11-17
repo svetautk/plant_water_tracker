@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { Plant } from '../types/plant';
 import PlantCard from './PlantCard';
+import { sortPlants } from '../utils/date';
 
 interface Props {
   plants: Plant[];
@@ -16,9 +17,11 @@ export default function PlantList({ plants, onEdit, onDelete, onWater }: Props) 
     return <p className="empty">{t('empty')}</p>;
   }
 
+  const sortedPlants = sortPlants(plants);
+
   return (
     <div className="grid">
-      {plants.map((plant) => (
+      {sortedPlants.map((plant) => (
         <PlantCard
           key={plant.id}
           plant={plant}
