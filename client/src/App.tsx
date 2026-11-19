@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
+import { Navigate, Route, Routes } from 'react-router';
 import AuthPage from './components/AuthPage';
 import HomePage from './components/HomePage';
 import { useMe } from './hooks/useAuth';
 
-// App теперь работает как "охранник" (auth guard): спрашивает сервер, кто вошёл,
-// и в зависимости от ответа показывает нужный экран.
+// App работает как "охранник" (auth guard): спрашивает сервер, кто вошёл,
+// и вместе с адресом в браузере решает, какой экран показать.
 export default function App() {
   const { t } = useTranslation();
   const { data: user, isPending, isError, refetch } = useMe();
@@ -28,9 +29,32 @@ export default function App() {
     );
   }
 
-  // 3. Никто не вошёл.
-  if (!user) return <AuthPage />;
+  // 3. Ответ есть: выбираем экран по адресу.
+  // Routes смотрит на текущий адрес и показывает element того Route, чей path совпал.
+  // <Navigate to="..." replace /> сразу переводит на другой адрес.
+  // replace: заменить текущую запись в истории браузера, а не добавить новую,
+  // иначе кнопка «Назад» возвращала бы на адрес, с которого нас тут же снова перекинет.
+  return (
+    <Routes>
+      {/* Главная только для вошедших, остальных отправляем на вход */}
+      <Route path="/" element={user ? <HomePage /> : <Navigate to="/login" replace />} />
 
-  // 4. Пользователь есть.
-  return <HomePage />;
+      {/* Вход и регистрация только для НЕ вошедших. Поэтому после успешного входа
+          экран переключается сам: useLogin записывает пользователя в кеш,
+          App перерисовывается, user уже есть, и Navigate уводит на главную.
+          key: при переходе /login <-> /register React создаёт форму заново,
+          и поля, ошибки и запросы сбрасываются (см. пояснение в AuthPage). */}
+      <Route
+        path="/login"
+        element={user ? <Navigate to="/" replace /> : <AuthPage key="login" mode="login" />}
+      />
+      <Route
+        path="/register"
+        element={user ? <Navigate to="/" replace /> : <AuthPage key="register" mode="register" />}
+      />
+
+      {/* path="*" значит «любой другой адрес»: например, /abc уводим на главную */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }

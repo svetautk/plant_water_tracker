@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 import { ApiError } from '../api/client';
 import { useLogin, useRegister } from '../hooks/useAuth';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -8,11 +9,17 @@ import LanguageSwitcher from './LanguageSwitcher';
 // Защиту она не даёт, её даёт только серверная проверка.
 import { EMAIL_MAX, PASSWORD_MAX, PASSWORD_MIN } from '../config';
 
-type Mode = 'login' | 'register';
+interface Props {
+  // Какую форму показать. Решает App по адресу: /login или /register.
+  mode: 'login' | 'register';
+}
 
-export default function AuthPage() {
+// Отдельной функции "переключить режим" больше нет: переключение это переход
+// по ссылке на другой адрес. App передаёт сюда новый mode и другой key,
+// поэтому React создаёт компонент заново: все useState начинаются с начальных
+// значений, а мутации без старых ошибок. Сбрасывать что-то вручную не нужно.
+export default function AuthPage({ mode }: Props) {
   const { t } = useTranslation();
-  const [mode, setMode] = useState<Mode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -48,15 +55,6 @@ export default function AuthPage() {
   const passwordsMatch = password === confirmPassword;
   const showMismatch = !isLogin && confirmTouched && !passwordsMatch;
 
-  const switchMode = () => {
-    setMode(mode === 'login' ? 'register' : 'login');
-    setConfirmPassword('');
-    setConfirmTouched(false);
-    // Сбрасываем старую ошибку, чтобы "неверный пароль" не висел на форме регистрации
-    loginMutation.reset();
-    registerMutation.reset();
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // без этого браузер перезагрузил бы страницу
 
@@ -69,7 +67,7 @@ export default function AuthPage() {
     }
 
     // Дальше всё делает хук: запрос, а при успехе запись пользователя в кеш.
-    // App увидит пользователя и сам покажет главный экран.
+    // App увидит пользователя и сам переведёт на главную (адрес /).
     mutation.mutate({ email: email.trim(), password });
   };
 
@@ -160,9 +158,11 @@ export default function AuthPage() {
 
         <p className="auth__switch">
           {isLogin ? t('auth.noAccount') : t('auth.haveAccount')}{' '}
-          <button type="button" className="link-btn" onClick={switchMode}>
+          {/* Link выглядит и работает как ссылка <a>, но не перезагружает страницу:
+              React Router только меняет адрес и показывает нужный экран */}
+          <Link to={isLogin ? '/register' : '/login'} className="link-btn">
             {isLogin ? t('auth.toRegister') : t('auth.toLogin')}
-          </button>
+          </Link>
         </p>
       </form>
     </div>
