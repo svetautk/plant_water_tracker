@@ -5,8 +5,8 @@ import { randomBytes } from 'node:crypto';
 import { db } from '../db/index.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { BCRYPT_ROUNDS, SESSION_COOKIE, SESSION_MS } from '../config.js';
-// Общие с клиентом ограничения: пакет @plant/shared (папка shared/ в корне проекта)
-import { EMAIL_MAX, PASSWORD_MAX, PASSWORD_MIN } from '@plant/shared';
+// Общие с клиентом схемы проверки: пакет @plant/shared (файл shared/schemas.ts)
+import { loginSchema, registerSchema } from '@plant/shared';
 
 // Свойства cookie без срока жизни (срок добавляем только при установке, см. ниже)
 const cookieBase = {
@@ -32,37 +32,21 @@ const startSession = (res: Response, userId: number) => {
   res.cookie(SESSION_COOKIE, id, { ...cookieBase, maxAge: SESSION_MS });
 };
 
-// Из тела запроса достаём email и пароль или возвращаем null, если там мусор.
-// Email приводим к нижнему регистру: Anna@mail.com и anna@mail.com это один человек.
-const readCredentials = (body: unknown): { email: string; password: string } | null => {
-  if (typeof body !== 'object' || body === null) return null;
-  const { email, password } = body as Record<string, unknown>;
-  if (typeof email !== 'string' || typeof password !== 'string') return null;
-  return { email: email.trim().toLowerCase(), password };
-};
-
-// Минимальная проверка: что-то@что-то.что-то и без пробелов.
-// Строже проверять смысла нет, настоящую проверку делает только письмо на адрес.
-const isValidEmail = (email: string) =>
-  email.length <= EMAIL_MAX && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
 export const authRouter = Router();
 
 // POST /api/auth/register
 authRouter.post('/register', async (req, res) => {
-  const credentials = readCredentials(req.body);
+  // safeParse проверяет тело запроса по схеме и НЕ бросает ошибку, а возвращает
+  // { success: true, data: ... } или { success: false, error: ... }.
+  // В data уже очищенные значения: email без пробелов и в нижнем регистре.
+  const parsed = registerSchema.safeParse(req.body);
 
-  if (
-    !credentials ||
-    !isValidEmail(credentials.email) ||
-    credentials.password.length < PASSWORD_MIN ||
-    credentials.password.length > PASSWORD_MAX
-  ) {
+  if (!parsed.success) {
     res.status(400).json({ error: 'Invalid email or password' });
     return;
   }
 
-  const { email, password } = credentials;
+  const { email, password } = parsed.data;
 
   const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
   if (existing) {
@@ -90,14 +74,14 @@ authRouter.post('/register', async (req, res) => {
 
 // POST /api/auth/login
 authRouter.post('/login', async (req, res) => {
-  const credentials = readCredentials(req.body);
+  const parsed = loginSchema.safeParse(req.body);
 
-  if (!credentials) {
+  if (!parsed.success) {
     res.status(400).json({ error: 'Invalid email or password' });
     return;
   }
 
-  const { email, password } = credentials;
+  const { email, password } = parsed.data;
 
   const user = db
     .prepare('SELECT id, email, password_hash FROM users WHERE email = ?')

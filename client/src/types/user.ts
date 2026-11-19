@@ -4,8 +4,5 @@ export interface User {
   email: string;
 }
 
-// Что отправляем при входе и регистрации
-export interface Credentials {
-  email: string;
-  password: string;
-}
+// Что отправляем при входе и регистрации: тип из общего пакета (shared/schemas.ts)
+export type { Credentials } from '@plant/shared';

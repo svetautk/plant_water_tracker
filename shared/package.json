@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "sideEffects": false,
   "exports": {
-    ".": "./limits.ts"
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
   }
 }
