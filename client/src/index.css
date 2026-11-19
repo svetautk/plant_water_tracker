@@ -407,6 +407,10 @@ input {
   font-size: 0.8rem;
 }
 
+.field__hint--error {
+  color: var(--overdue-fg);
+}
+
 /* Плашка ошибки: на форме входа, в модалке растения и над списком */
 .auth__error,
 .banner-error {

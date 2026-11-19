@@ -9,6 +9,7 @@
     "registerTitle": "Sign up",
     "email": "Email",
     "password": "Password",
+    "confirmPassword": "Confirm password",
     "passwordHint_one": "At least {{count}} character",
     "passwordHint_other": "At least {{count}} characters",
     "login": "Log in",
@@ -23,7 +24,8 @@
       "wrongCredentials": "Wrong email or password",
       "emailTaken": "This email is already registered",
       "invalid": "Check your email and password",
-      "unknown": "Could not reach the server"
+      "unknown": "Could not reach the server",
+      "passwordMismatch": "Passwords do not match"
     }
   },
   "empty": "You don't have any plants yet",

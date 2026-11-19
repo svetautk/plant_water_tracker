@@ -9,6 +9,7 @@
     "registerTitle": "Регистрация",
     "email": "Email",
     "password": "Пароль",
+    "confirmPassword": "Повторите пароль",
     "passwordHint_one": "Минимум {{count}} символ",
     "passwordHint_few": "Минимум {{count}} символа",
     "passwordHint_many": "Минимум {{count}} символов",
@@ -25,7 +26,8 @@
       "wrongCredentials": "Неверный email или пароль",
       "emailTaken": "Этот email уже зарегистрирован",
       "invalid": "Проверьте email и пароль",
-      "unknown": "Не удалось связаться с сервером"
+      "unknown": "Не удалось связаться с сервером",
+      "passwordMismatch": "Пароли не совпадают"
     }
   },
   "empty": "У вас пока нет растений",

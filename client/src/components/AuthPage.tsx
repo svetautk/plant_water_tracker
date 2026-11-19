@@ -17,6 +17,11 @@ export default function AuthPage() {
   const [mode, setMode] = useState<Mode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  // Показывать ли ошибку "пароли не совпадают". Пока человек не закончил ввод,
+  // ругаться рано: после первой же буквы пароли, конечно, "не совпадают".
+  // Поэтому включаем показ, когда поле теряет фокус (onBlur) или при отправке формы.
+  const [confirmTouched, setConfirmTouched] = useState(false);
 
   const loginMutation = useLogin();
   const registerMutation = useRegister();
@@ -37,8 +42,18 @@ export default function AuthPage() {
     return t('auth.errors.unknown');
   })();
 
+  const isLogin = mode === 'login';
+
+  // Не храним "совпадают ли пароли" в отдельном useState: это значение
+  // ВЫЧИСЛЯЕТСЯ из двух других состояний. Отдельное состояние пришлось бы
+  // вручную синхронизировать, и рано или поздно оно бы разъехалось с реальностью.
+  const passwordsMatch = password === confirmPassword;
+  const showMismatch = !isLogin && confirmTouched && !passwordsMatch;
+
   const switchMode = () => {
     setMode(mode === 'login' ? 'register' : 'login');
+    setConfirmPassword('');
+    setConfirmTouched(false);
     // Сбрасываем старую ошибку, чтобы "неверный пароль" не висел на форме регистрации
     loginMutation.reset();
     registerMutation.reset();
@@ -46,12 +61,19 @@ export default function AuthPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // без этого браузер перезагрузил бы страницу
+
+    // Подтверждение пароля проверяем ТОЛЬКО на клиенте и на сервер не отправляем.
+    // Это защита от опечатки самого пользователя, а не от злоумышленника:
+    // серверу важен только сам пароль.
+    if (!isLogin && !passwordsMatch) {
+      setConfirmTouched(true); // показать ошибку, даже если поле ещё не теряло фокус
+      return;
+    }
+
     // Дальше всё делает хук: запрос, а при успехе запись пользователя в кеш.
     // App увидит пользователя и сам покажет главный экран.
     mutation.mutate({ email: email.trim(), password });
   };
-
-  const isLogin = mode === 'login';
 
   return (
     <div className="auth">
@@ -94,6 +116,32 @@ export default function AuthPage() {
           />
           {!isLogin && <span className="field__hint">{t('auth.passwordHint', { count: PASSWORD_MIN })}</span>}
         </label>
+
+        {/* Поле есть только при регистрации: при входе подтверждать нечего */}
+        {!isLogin && (
+          <label className="field">
+            <span className="field__label">{t('auth.confirmPassword')}</span>
+            <input
+              className={`input ${showMismatch ? 'input--limit' : ''}`}
+              type="password"
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              onBlur={() => setConfirmTouched(true)}
+              maxLength={PASSWORD_MAX}
+              required
+              // aria-invalid и aria-describedby: экранная читалка скажет,
+              // что поле с ошибкой, и прочитает текст ошибки
+              aria-invalid={showMismatch}
+              aria-describedby={showMismatch ? 'confirm-error' : undefined}
+            />
+            {showMismatch && (
+              <span id="confirm-error" className="field__hint field__hint--error">
+                {t('auth.errors.passwordMismatch')}
+              </span>
+            )}
+          </label>
+        )}
 
         {/* role="alert": экранная читалка сразу озвучит ошибку */}
         {errorText && (
