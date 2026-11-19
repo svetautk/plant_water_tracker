@@ -24,3 +24,6 @@ server/data/*.db
 *.njsproj
 *.sln
 *.sw?
+
+# Local Claude Code launch config
+.claude/launch.json
