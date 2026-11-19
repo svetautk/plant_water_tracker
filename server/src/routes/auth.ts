@@ -3,15 +3,10 @@ import type { Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { randomBytes } from 'node:crypto';
 import { db } from '../db/index.js';
-import { requireAuth, SESSION_COOKIE, SESSION_MS } from '../middleware/requireAuth.js';
-
-const EMAIL_MAX = 254;
-const PASSWORD_MIN = 8;
-// bcrypt учитывает только первые 72 байта пароля, поэтому длиннее не принимаем
-const PASSWORD_MAX = 72;
-// Сколько раз bcrypt "перемешивает" пароль. Больше значит надёжнее, но медленнее.
-// 10 это стандартный баланс.
-const BCRYPT_ROUNDS = 10;
+import { requireAuth } from '../middleware/requireAuth.js';
+import { BCRYPT_ROUNDS, SESSION_COOKIE, SESSION_MS } from '../config.js';
+// Общие с клиентом ограничения: пакет @plant/shared (папка shared/ в корне проекта)
+import { EMAIL_MAX, PASSWORD_MAX, PASSWORD_MIN } from '@plant/shared';
 
 // Свойства cookie без срока жизни (срок добавляем только при установке, см. ниже)
 const cookieBase = {

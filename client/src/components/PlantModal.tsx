@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Plant, PlantInput } from '../types/plant';
 import { getTodayDateStr } from '../utils/date';
-
-const EMOJIS = ['🪴', '🌱', '🌿', '🍀', '🌵', '🌴', '🌸', '🌷', '🌻', '🌺', '🍃', '🌼', '🍅', '🥬', '🌶️', '🎍'];
-const NAME_MAX = 25;
-const INTERVAL_MIN = 1;
-const INTERVAL_MAX = 365;
+import {
+  DEFAULT_INTERVAL_DAYS,
+  INTERVAL_MAX,
+  INTERVAL_MIN,
+  PLANT_EMOJIS,
+  PLANT_NAME_MAX,
+} from '../config';
 
 interface Props {
   plant?: Plant;
@@ -20,10 +22,10 @@ export default function PlantModal({ plant, onSave, onClose, isSaving, errorText
   const { t } = useTranslation();
   const today = getTodayDateStr();
 
-  const [emoji, setEmoji] = useState(plant?.emoji ?? EMOJIS[0]);
+  const [emoji, setEmoji] = useState(plant?.emoji ?? PLANT_EMOJIS[0]);
   const [name, setName] = useState(plant?.name ?? '');
   const [lastWatered, setLastWatered] = useState(plant?.lastWatered ?? today);
-  const [intervalDays, setIntervalDays] = useState(String(plant?.intervalDays ?? 7));
+  const [intervalDays, setIntervalDays] = useState(String(plant?.intervalDays ?? DEFAULT_INTERVAL_DAYS));
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -53,7 +55,7 @@ export default function PlantModal({ plant, onSave, onClose, isSaving, errorText
         <div className="field">
           <span className="field__label">{t('form.icon')}</span>
           <div className="emoji-grid">
-            {EMOJIS.map((e) => (
+            {PLANT_EMOJIS.map((e) => (
               <button
                 key={e}
                 type="button"
@@ -70,16 +72,16 @@ export default function PlantModal({ plant, onSave, onClose, isSaving, errorText
           <span className="field__label field__label--row">
             {t('form.name')}
             {/* Счётчик: краснеет, когда достигнут лимит */}
-            <span className={`field__counter ${name.length >= NAME_MAX ? 'field__counter--limit' : ''}`}>
-              {name.length}/{NAME_MAX}
+            <span className={`field__counter ${name.length >= PLANT_NAME_MAX ? 'field__counter--limit' : ''}`}>
+              {name.length}/{PLANT_NAME_MAX}
             </span>
           </span>
           <input
-            className={`input ${name.length >= NAME_MAX ? 'input--limit' : ''}`}
+            className={`input ${name.length >= PLANT_NAME_MAX ? 'input--limit' : ''}`}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={t('form.namePlaceholder')}
-            maxLength={NAME_MAX}
+            maxLength={PLANT_NAME_MAX}
             required
             autoFocus
           />

@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import { requireAuth } from './middleware/requireAuth.js';
 import { authRouter } from './routes/auth.js';
 import { plantsRouter } from './routes/plants.js';
+import { PORT } from './config.js';
 
 const app = express();
 
@@ -19,7 +20,6 @@ app.use('/api/auth', authRouter);
 // Растения: только для вошедших
 app.use('/api/plants', requireAuth, plantsRouter);
 
-const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server: http://localhost:${PORT}`);
 });

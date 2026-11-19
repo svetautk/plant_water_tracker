@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import { randomUUID } from 'node:crypto';
 import { db } from '../db/index.js';
+import {
+  INTERVAL_MAX,
+  INTERVAL_MIN,
+  PLANT_EMOJI_MAX,
+  PLANT_NAME_MAX,
+} from '@plant/shared';
 
 interface PlantInput {
   emoji: string;
@@ -14,10 +20,6 @@ interface Plant extends PlantInput {
 }
 
 const COLUMNS = `id, emoji, name, last_watered AS lastWatered, interval_days AS intervalDays`;
-const EMOJI_MAX = 12;
-const NAME_MAX = 25;
-const INTERVAL_MIN = 1;
-const INTERVAL_MAX = 365;
 
 const isValidDate = (value: unknown): value is string => {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
@@ -29,8 +31,8 @@ const isValidDate = (value: unknown): value is string => {
 const validatePlant = (input: Record<string, unknown>): PlantInput | null => {
   const { emoji, name, lastWatered, intervalDays } = input;
 
-  if (typeof emoji !== 'string' || emoji.length === 0 || emoji.length > EMOJI_MAX) return null;
-  if (typeof name !== 'string' || name.trim().length === 0 || name.trim().length > NAME_MAX) return null;
+  if (typeof emoji !== 'string' || emoji.length === 0 || emoji.length > PLANT_EMOJI_MAX) return null;
+  if (typeof name !== 'string' || name.trim().length === 0 || name.trim().length > PLANT_NAME_MAX) return null;
   if (!isValidDate(lastWatered)) return null;
   if (typeof intervalDays !== 'number' || !Number.isInteger(intervalDays)) return null;
   if (intervalDays < INTERVAL_MIN || intervalDays > INTERVAL_MAX) return null;

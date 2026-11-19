@@ -3,12 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { ApiError } from '../api/client';
 import { useLogin, useRegister } from '../hooks/useAuth';
 import LanguageSwitcher from './LanguageSwitcher';
-
-// Такие же ограничения, как на сервере (routes/auth.ts).
+// Те же ограничения проверяет сервер: оба берут их из shared/limits.ts.
 // Клиентская проверка нужна для удобства: подсказать сразу, не дожидаясь сервера.
 // Защиту она не даёт, её даёт только серверная проверка.
-const PASSWORD_MIN = 8;
-const PASSWORD_MAX = 72;
+import { EMAIL_MAX, PASSWORD_MAX, PASSWORD_MIN } from '../config';
 
 type Mode = 'login' | 'register';
 
@@ -91,6 +89,7 @@ export default function AuthPage() {
             className="input"
             type="email" // браузер сам проверит формат и покажет нужную клавиатуру на телефоне
             autoComplete="email" // менеджер паролей поймёт, что сюда подставлять
+            maxLength={EMAIL_MAX}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

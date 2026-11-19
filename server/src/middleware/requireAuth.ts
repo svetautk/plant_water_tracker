@@ -1,9 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { db } from '../db/index.js';
-
-// Имя cookie и срок жизни сессии. Экспортируем, потому что auth.ts ставит ту же cookie.
-export const SESSION_COOKIE = 'sid';
-export const SESSION_MS = 30 * 24 * 60 * 60 * 1000; // 30 дней в миллисекундах
+import { SESSION_COOKIE } from '../config.js';
 
 // Проверка входа. Выполняется перед каждым защищённым маршрутом.
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
