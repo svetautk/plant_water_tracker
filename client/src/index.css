@@ -324,9 +324,31 @@ input {
   background: var(--ok-bg);
 }
 
+.field__label--row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.field__counter {
+  font-size: 0.8rem;
+}
+
+/* На лимите счётчик и рамка поля становятся терракотовыми */
+.field__counter--limit {
+  color: var(--overdue-fg);
+}
+
+.input--limit {
+  border-color: var(--overdue-fg);
+}
+
+.input--limit:focus {
+  outline-color: var(--overdue-fg);
+}
+
 /* Окно подтверждения обычной модалки */
 .modal--small {
-  max-width: 380px;
+  max-width: 450px;
 }
 
 .confirm__text {
@@ -342,6 +364,97 @@ input {
 
 .btn--danger:hover {
   background: #8c4430;
+}
+
+/* ---------- Страница входа и регистрации ---------- */
+/* Карточка по центру экрана: flex по обеим осям, min-height на весь экран */
+.auth {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.auth__lang {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+}
+
+.auth__card {
+  width: 100%;
+  max-width: 380px;
+  padding: 32px 28px;
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+
+.auth__logo {
+  margin: 0 0 24px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-size: 1.75rem;
+  text-align: center;
+}
+
+.field__hint {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* Плашка ошибки: на форме входа, в модалке растения и над списком */
+.auth__error,
+.banner-error {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--overdue-bg);
+  color: var(--overdue-fg);
+  font-size: 0.9rem;
+}
+
+.auth__switch {
+  margin: 16px 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Кнопка, которая выглядит как ссылка. Это именно button, а не <a>:
+   она не ведёт на другой адрес, а переключает режим формы */
+.link-btn {
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+/* Неактивная кнопка (пока идёт запрос) */
+.btn:disabled,
+.icon-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Экран загрузки и ошибки соединения */
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 120px;
+  color: var(--muted);
 }
 
 /* ---------- Мобильные ---------- */

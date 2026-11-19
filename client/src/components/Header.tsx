@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Plus } from 'lucide-react';
+import { LogOut, Plus } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useLogout } from '../hooks/useAuth';
 
 interface Props {
   onAdd: () => void;
@@ -8,6 +9,9 @@ interface Props {
 
 export default function Header({ onAdd }: Props) {
   const { t } = useTranslation();
+  // Хук вызываем прямо здесь, а не передаём onLogout пропсом из App:
+  // кеш TanStack Query доступен любому компоненту, "прокидывать" ничего не нужно.
+  const logoutMutation = useLogout();
 
   return (
     <header className="header">
@@ -19,6 +23,16 @@ export default function Header({ onAdd }: Props) {
           <span className="header__add-text">{t('header.addPlant')}</span>
         </button>
         <LanguageSwitcher />
+        <button
+          type="button"
+          className="icon-btn"
+          onClick={() => logoutMutation.mutate()}
+          disabled={logoutMutation.isPending}
+          title={t('header.logout')}
+          aria-label={t('header.logout')}
+        >
+          <LogOut size={20} />
+        </button>
       </div>
     </header>
   );

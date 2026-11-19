@@ -1,45 +1,72 @@
-import { useEffect, useState } from 'react';
+// Хуки для растений. Раньше здесь были useState + localStorage,
+// теперь источник правды это сервер, а TanStack Query держит его копию в кеше.
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createPlant, deletePlant, fetchPlants, updatePlant } from '../api/plants';
 import type { Plant, PlantInput } from '../types/plant';
 import { getTodayDateStr } from '../utils/date';
 
-const STORAGE_KEY = 'plant-tracker:plants';
+export const PLANTS_KEY = ['plants'];
 
-const loadPlants = (): Plant[] => {
-  try {
-    const rawData = localStorage.getItem(STORAGE_KEY);
-    if (!rawData) return [];
+// Чтение списка. Компонент получает { data, isPending, isError, refetch }.
+export const usePlants = () =>
+  useQuery({
+    queryKey: PLANTS_KEY,
+    queryFn: fetchPlants,
+  });
 
-    const parsed: unknown = JSON.parse(rawData);
-    return Array.isArray(parsed) ? (parsed as Plant[]) : [];
-  } catch {
-    return [];
-  }
+// Все мутации ниже устроены одинаково: сервер возвращает итоговое растение,
+// и мы точечно обновляем массив в кеше через setQueryData.
+// Можно было бы вместо этого вызвать invalidateQueries(PLANTS_KEY), и TanStack Query
+// заново скачал бы весь список. Это проще, но делает лишний запрос.
+// Здесь ответ сервера и так содержит всё нужное, поэтому обновляем кеш сами.
+
+export const useAddPlant = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createPlant,
+    onSuccess: (created) => {
+      // old может быть undefined, если список ещё не загружен,
+      // поэтому значение по умолчанию: (old = [])
+      queryClient.setQueryData<Plant[]>(PLANTS_KEY, (old = []) => [...old, created]);
+    },
+  });
 };
 
-export const usePlants = () => {
-  const [plants, setPlants] = useState<Plant[]>(loadPlants);
+// Вспомогательная функция: заменить в массиве растение с тем же id
+const replacePlant = (plants: Plant[] = [], updated: Plant) =>
+  plants.map((p) => (p.id === updated.id ? updated : p));
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(plants));
-  }, [plants]);
+export const useUpdatePlant = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    // useMutation передаёт в mutationFn ОДИН аргумент, поэтому id и данные
+    // упаковываем в объект: mutate({ id, data })
+    mutationFn: ({ id, data }: { id: string; data: PlantInput }) => updatePlant(id, data),
+    onSuccess: (updated) => {
+      queryClient.setQueryData<Plant[]>(PLANTS_KEY, (old) => replacePlant(old, updated));
+    },
+  });
+};
 
-  const addPlant = (data: PlantInput) => {
-    setPlants((prev) => [...prev, { ...data, id: crypto.randomUUID() }]);
-  };
+export const useWaterPlant = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    // Шлём только одно поле: PATCH для того и нужен
+    mutationFn: (id: string) => updatePlant(id, { lastWatered: getTodayDateStr() }),
+    onSuccess: (updated) => {
+      queryClient.setQueryData<Plant[]>(PLANTS_KEY, (old) => replacePlant(old, updated));
+    },
+  });
+};
 
-  const updatePlant = (id: string, data: PlantInput) => {
-    setPlants((prev) => prev.map((p) => (p.id === id ? { ...p, ...data } : p)));
-  };
-
-  const removePlant = (id: string) => {
-    setPlants((prev) => prev.filter((p) => p.id !== id));
-  };
-
-  const waterNow = (id: string) => {
-    setPlants((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, lastWatered: getTodayDateStr() } : p)),
-    );
-  };
-
-  return { plants, addPlant, updatePlant, removePlant, waterNow };
+export const useDeletePlant = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deletePlant,
+    // Сервер ничего не вернул (204), но в onSuccess второй аргумент это то,
+    // с чем вызвали mutate(), то есть id удалённого растения
+    onSuccess: (_result, id) => {
+      queryClient.setQueryData<Plant[]>(PLANTS_KEY, (old = []) => old.filter((p) => p.id !== id));
+    },
+  });
 };

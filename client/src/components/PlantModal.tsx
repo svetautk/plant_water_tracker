@@ -4,14 +4,19 @@ import type { Plant, PlantInput } from '../types/plant';
 import { getTodayDateStr } from '../utils/date';
 
 const EMOJIS = ['🪴', '🌱', '🌿', '🍀', '🌵', '🌴', '🌸', '🌷', '🌻', '🌺', '🍃', '🌼', '🍅', '🥬', '🌶️', '🎍'];
+const NAME_MAX = 25;
+const INTERVAL_MIN = 1;
+const INTERVAL_MAX = 365;
 
 interface Props {
   plant?: Plant;
   onSave: (data: PlantInput) => void;
   onClose: () => void;
+  isSaving?: boolean; // идёт запрос к серверу: блокируем кнопку «Сохранить»
+  errorText?: string; // сервер вернул ошибку: показываем над кнопками
 }
 
-export default function PlantModal({ plant, onSave, onClose }: Props) {
+export default function PlantModal({ plant, onSave, onClose, isSaving, errorText }: Props) {
   const { t } = useTranslation();
   const today = getTodayDateStr();
 
@@ -62,13 +67,19 @@ export default function PlantModal({ plant, onSave, onClose }: Props) {
         </div>
 
         <label className="field">
-          <span className="field__label">{t('form.name')}</span>
+          <span className="field__label field__label--row">
+            {t('form.name')}
+            {/* Счётчик: краснеет, когда достигнут лимит */}
+            <span className={`field__counter ${name.length >= NAME_MAX ? 'field__counter--limit' : ''}`}>
+              {name.length}/{NAME_MAX}
+            </span>
+          </span>
           <input
-            className="input"
+            className={`input ${name.length >= NAME_MAX ? 'input--limit' : ''}`}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={t('form.namePlaceholder')}
-            maxLength={40}
+            maxLength={NAME_MAX}
             required
             autoFocus
           />
@@ -91,8 +102,8 @@ export default function PlantModal({ plant, onSave, onClose }: Props) {
           <input
             className="input"
             type="number"
-            min={1}
-            max={365}
+            min={INTERVAL_MIN}
+            max={INTERVAL_MAX}
             step={1}
             value={intervalDays}
             onChange={(e) => setIntervalDays(e.target.value)}
@@ -100,11 +111,17 @@ export default function PlantModal({ plant, onSave, onClose }: Props) {
           />
         </label>
 
+        {errorText && (
+          <p className="banner-error" role="alert">
+            {errorText}
+          </p>
+        )}
+
         <div className="modal__actions">
           <button type="button" className="btn btn--ghost" onClick={onClose}>
             {t('form.cancel')}
           </button>
-          <button type="submit" className="btn btn--primary">
+          <button type="submit" className="btn btn--primary" disabled={isSaving}>
             {t('form.save')}
           </button>
         </div>

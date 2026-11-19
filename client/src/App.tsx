@@ -1,43 +1,36 @@
-import { useState, useCallback } from 'react';
-import Header from './components/Header';
-import PlantList from './components/PlantList';
-import PlantModal from './components/PlantModal';
-import { usePlants } from './hooks/usePlants';
-import type { Plant, PlantInput } from './types/plant';
+import { useTranslation } from 'react-i18next';
+import AuthPage from './components/AuthPage';
+import HomePage from './components/HomePage';
+import { useMe } from './hooks/useAuth';
 
-type ModalState = { mode: 'closed' } | { mode: 'add' } | { mode: 'edit'; plant: Plant };
-
+// App теперь работает как "охранник" (auth guard): спрашивает сервер, кто вошёл,
+// и в зависимости от ответа показывает нужный экран.
 export default function App() {
-  const { plants, addPlant, updatePlant, removePlant, waterNow } = usePlants();
-  const [modal, setModal] = useState<ModalState>({ mode: 'closed' });
+  const { t } = useTranslation();
+  const { data: user, isPending, isError, refetch } = useMe();
 
-  const close = useCallback(() => setModal({ mode: 'closed' }), []);
+  // 1. Ответа ещё нет. Не показываем ни вход, ни главный экран,
+  //    иначе вошедший пользователь на долю секунды увидел бы форму входа ("мигание").
+  if (isPending) {
+    return <p className="status">{t('auth.loading')}</p>;
+  }
 
-  const handleSave = (data: PlantInput) => {
-    if (modal.mode === 'edit') updatePlant(modal.plant.id, data);
-    else addPlant(data);
-    close();
-  };
+  // 2. Запрос упал не из-за 401 (401 fetchMe превращает в null),
+  //    а например потому, что сервер не запущен.
+  if (isError) {
+    return (
+      <div className="status">
+        <p>{t('auth.errors.unknown')}</p>
+        <button type="button" className="btn btn--ghost" onClick={() => refetch()}>
+          {t('auth.retry')}
+        </button>
+      </div>
+    );
+  }
 
-  return (
-    <>
-      <Header onAdd={() => setModal({ mode: 'add' })} />
-      <main className="main">
-        <PlantList
-          plants={plants}
-          onEdit={(plant: Plant) => setModal({ mode: 'edit', plant })}
-          onDelete={removePlant}
-          onWater={waterNow}
-        />
-      </main>
+  // 3. Никто не вошёл.
+  if (!user) return <AuthPage />;
 
-      {modal.mode !== 'closed' && (
-        <PlantModal
-          plant={modal.mode === 'edit' ? modal.plant : undefined}
-          onSave={handleSave}
-          onClose={close}
-        />
-      )}
-    </>
-  );
+  // 4. Пользователь есть.
+  return <HomePage />;
 }

@@ -1,11 +1,39 @@
 {
   "header": {
     "title": "Plant",
-    "addPlant": "Добавить"
+    "addPlant": "Добавить",
+    "logout": "Выйти"
   },
-
+  "auth": {
+    "loginTitle": "Вход",
+    "registerTitle": "Регистрация",
+    "email": "Email",
+    "password": "Пароль",
+    "passwordHint_one": "Минимум {{count}} символ",
+    "passwordHint_few": "Минимум {{count}} символа",
+    "passwordHint_many": "Минимум {{count}} символов",
+    "passwordHint_other": "Минимум {{count}} символа",
+    "login": "Войти",
+    "register": "Зарегистрироваться",
+    "loading": "Загрузка…",
+    "retry": "Повторить",
+    "noAccount": "Нет аккаунта?",
+    "haveAccount": "Уже есть аккаунт?",
+    "toRegister": "Зарегистрироваться",
+    "toLogin": "Войти",
+    "errors": {
+      "wrongCredentials": "Неверный email или пароль",
+      "emailTaken": "Этот email уже зарегистрирован",
+      "invalid": "Проверьте email и пароль",
+      "unknown": "Не удалось связаться с сервером"
+    }
+  },
   "empty": "У вас пока нет растений",
-
+  "plants": {
+    "loadError": "Не удалось загрузить растения",
+    "saveError": "Не удалось сохранить. Попробуйте ещё раз",
+    "actionError": "Действие не выполнилось. Проверьте соединение и попробуйте ещё раз"
+  },
   "form": {
     "addTitle": "Новое растение",
     "editTitle": "Редактирование",
@@ -17,7 +45,6 @@
     "save": "Сохранить",
     "cancel": "Отмена"
   },
-
   "card": {
     "waterEvery_one": "Полив раз в {{count}} день",
     "waterEvery_few": "Полив раз в {{count}} дня",
@@ -31,7 +58,6 @@
     "confirmTitle": "Удалить растение?",
     "confirmText": "Растение «{{name}}» будет удалено навсегда."
   },
-  
   "when": {
     "today": "сегодня",
     "tomorrow": "завтра",

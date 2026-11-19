@@ -1,11 +1,37 @@
 {
   "header": {
     "title": "Plant",
-    "addPlant": "Add plant"
+    "addPlant": "Add plant",
+    "logout": "Log out"
   },
-
+  "auth": {
+    "loginTitle": "Log in",
+    "registerTitle": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint_one": "At least {{count}} character",
+    "passwordHint_other": "At least {{count}} characters",
+    "login": "Log in",
+    "register": "Sign up",
+    "loading": "Loading…",
+    "retry": "Retry",
+    "noAccount": "No account?",
+    "haveAccount": "Already have an account?",
+    "toRegister": "Sign up",
+    "toLogin": "Log in",
+    "errors": {
+      "wrongCredentials": "Wrong email or password",
+      "emailTaken": "This email is already registered",
+      "invalid": "Check your email and password",
+      "unknown": "Could not reach the server"
+    }
+  },
   "empty": "You don't have any plants yet",
-
+  "plants": {
+    "loadError": "Could not load plants",
+    "saveError": "Could not save. Please try again",
+    "actionError": "Action failed. Check your connection and try again"
+  },
   "form": {
     "addTitle": "Add plant",
     "editTitle": "Edit plant",
@@ -17,7 +43,6 @@
     "save": "Save",
     "cancel": "Cancel"
   },
-
   "card": {
     "waterEvery_one": "Water every day",
     "waterEvery_other": "Water every {{count}} days",
@@ -29,7 +54,6 @@
     "confirmTitle": "Delete plant?",
     "confirmText": "“{{name}}” will be deleted permanently."
   },
-
   "when": {
     "today": "today",
     "tomorrow": "tomorrow",
