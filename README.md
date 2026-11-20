@@ -2,7 +2,7 @@
 
 Set how often each plant needs water, and the app lets you know when it’s time.
 
-<!-- **[Live demo →](https://your-app.onrender.com)** -->
+**[Live demo →](https://plant-water-tracker.onrender.com)** 
 
 <table>
   <tr>
