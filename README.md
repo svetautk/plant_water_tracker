@@ -2,7 +2,9 @@
 
 Set how often each plant needs water, and the app lets you know when it’s time.
 
-**[Live demo →](https://plant-water-tracker.onrender.com)** 
+**[Live demo →](https://plant-water-tracker.onrender.com)**
+
+> The demo is hosted on a free plan, so the first load may take up to a minute. Please wait a moment.
 
 <table>
   <tr>
