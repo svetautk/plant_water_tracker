@@ -186,7 +186,13 @@ input {
   border-radius: 999px;
   cursor: pointer;
   font-weight: 500;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
+}
+
+/* Нажатие: кнопка чуть «вдавливается», пока зажата мышь или палец.
+   :not(:disabled) — неактивная кнопка не реагирует. */
+.btn:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
 .btn--primary {

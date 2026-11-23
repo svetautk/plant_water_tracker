@@ -15,7 +15,7 @@
     "login": "Log in",
     "register": "Sign up",
     "loading": "Loading…",
-    "retry": "Retry",
+    "reloadHint": "Try reloading the page",
     "noAccount": "No account?",
     "haveAccount": "Already have an account?",
     "toRegister": "Sign up",
