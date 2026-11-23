@@ -1,4 +1,3 @@
-// Главный экран со списком растений.
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from './Header';
@@ -25,32 +24,23 @@ export default function HomePage() {
   const waterMutation = useWaterPlant();
   const deleteMutation = useDeletePlant();
 
-  // Мутация, которая относится к открытой форме: добавление или редактирование
   const saveMutation = modal.mode === 'edit' ? updateMutation : addMutation;
 
-  // Достаём reset заранее: сам объект мутации новый на каждом рендере,
-  // а функция reset стабильна. Если указать в зависимостях весь объект,
-  // close пересоздавался бы постоянно, и useEffect в PlantModal перевешивал бы обработчик Escape.
   const resetAdd = addMutation.reset;
   const resetUpdate = updateMutation.reset;
 
   const close = useCallback(() => {
     setModal({ mode: 'closed' });
-    // Сбрасываем ошибку, чтобы при следующем открытии формы она не висела
     resetAdd();
     resetUpdate();
   }, [resetAdd, resetUpdate]);
 
   const handleSave = (data: PlantInput) => {
-    // У mutate есть второй аргумент: колбэки только для ЭТОГО вызова.
-    // Закрываем окно лишь после ответа сервера. Если сервер вернёт ошибку,
-    // окно останется открытым, и введённые данные не пропадут.
     const options = { onSuccess: close };
     if (modal.mode === 'edit') updateMutation.mutate({ id: modal.plant.id, data }, options);
     else addMutation.mutate(data, options);
   };
 
-  // Ошибки действий прямо на карточке (полить, удалить) показываем общей плашкой
   const actionError = waterMutation.isError || deleteMutation.isError;
 
   const renderContent = () => {
@@ -61,9 +51,7 @@ export default function HomePage() {
       return (
         <div className="status">
           <p>{t('plants.loadError')}</p>
-          <button type="button" className="btn btn--ghost" onClick={() => plantsQuery.refetch()}>
-            {t('auth.retry')}
-          </button>
+          <p>{t('auth.reloadHint')}</p>
         </div>
       );
     }

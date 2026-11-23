@@ -6,7 +6,7 @@ import { useMe } from './hooks/useAuth';
 
 export default function App() {
   const { t } = useTranslation();
-  const { data: user, isPending, isError, refetch } = useMe();
+  const { data: user, isPending, isError } = useMe();
 
   if (isPending) {
     return <p className="status">{t('auth.loading')}</p>;
@@ -16,9 +16,7 @@ export default function App() {
     return (
       <div className="status">
         <p>{t('auth.errors.unknown')}</p>
-        <button type="button" className="btn btn--ghost" onClick={() => refetch()}>
-          {t('auth.retry')}
-        </button>
+        <p>{t('auth.reloadHint')}</p>
       </div>
     );
   }
