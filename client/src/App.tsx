@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Navigate, Route, Routes } from 'react-router';
-import AuthPage from './components/AuthPage';
 import HomePage from './components/HomePage';
+import LoginPage from './components/LoginPage';
+import RegisterPage from './components/RegisterPage';
 import { useMe } from './hooks/useAuth';
 
 export default function App() {
@@ -27,11 +28,11 @@ export default function App() {
 
       <Route
         path="/login"
-        element={user ? <Navigate to="/" replace /> : <AuthPage key="login" mode="login" />}
+        element={user ? <Navigate to="/" replace /> : <LoginPage />}
       />
       <Route
         path="/register"
-        element={user ? <Navigate to="/" replace /> : <AuthPage key="register" mode="register" />}
+        element={user ? <Navigate to="/" replace /> : <RegisterPage />}
       />
 
       <Route path="*" element={<Navigate to="/" replace />} />

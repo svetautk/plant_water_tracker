@@ -1,12 +1,3 @@
-// Единая функция для всех запросов к нашему серверу.
-// Зачем она нужна, если есть fetch? fetch очень "голый":
-//  - не превращает ответ в JSON сам;
-//  - НЕ считает ошибкой статусы 400/401/404/500 (промис успешно резолвится!);
-//  - требует каждый раз писать заголовки.
-// Здесь мы делаем всё это один раз, а дальше просто пишем api.get('/plants').
-
-// Своя ошибка, в которой есть HTTP-статус.
-// Пригодится, чтобы отличать "не вошёл" (401) от "такой email уже есть" (409) и т.д.
 export class ApiError extends Error {
   status: number;
 
@@ -17,7 +8,6 @@ export class ApiError extends Error {
   }
 }
 
-// Все пути начинаются с /api. Vite (см. vite.config.ts) перенаправит их на localhost:3000.
 const BASE_URL = '/api';
 
 async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
