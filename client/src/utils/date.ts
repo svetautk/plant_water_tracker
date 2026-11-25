@@ -1,8 +1,8 @@
 import type { Plant } from '../types/plant';
 
-const MS_IN_DAY = 86_400_000; // кол-во миллисекунд в сутках
+const MS_IN_DAY = 86_400_000;
 
-export const getTodayDateStr = (): string => {  // поменять в других файлах название функции на getTodayDateStr
+export const getTodayDateStr = (): string => { 
   const d = new Date();
   const month = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
