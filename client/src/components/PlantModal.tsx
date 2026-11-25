@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Plant, PlantInput } from '../types/plant';
 import { getTodayDateStr } from '../utils/date';
+import { useAddPlant, useUpdatePlant } from '../hooks/usePlants';
 import {
   DEFAULT_INTERVAL_DAYS,
   INTERVAL_MAX,
@@ -12,13 +13,10 @@ import {
 
 interface Props {
   plant?: Plant;
-  onSave: (data: PlantInput) => void;
   onClose: () => void;
-  isSaving?: boolean; // идёт запрос к серверу: блокируем кнопку «Сохранить»
-  errorText?: string; // сервер вернул ошибку: показываем над кнопками
 }
 
-export default function PlantModal({ plant, onSave, onClose, isSaving, errorText }: Props) {
+export default function PlantModal({ plant, onClose }: Props) {
   const { t } = useTranslation();
   const today = getTodayDateStr();
 
@@ -26,6 +24,26 @@ export default function PlantModal({ plant, onSave, onClose, isSaving, errorText
   const [name, setName] = useState(plant?.name ?? '');
   const [lastWatered, setLastWatered] = useState(plant?.lastWatered ?? today);
   const [intervalDays, setIntervalDays] = useState(String(plant?.intervalDays ?? DEFAULT_INTERVAL_DAYS));
+
+  const addMutation = useAddPlant();
+  const updateMutation = useUpdatePlant();
+  const saveMutation = plant ? updateMutation : addMutation;
+
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data: PlantInput = {
+      emoji,
+      name: name.trim(),
+      lastWatered,
+      intervalDays: Number(intervalDays),
+    };
+    const options = { onSuccess: onClose };
+    if (plant) {
+      updateMutation.mutate({ id: plant.id, data }, options);
+    } else {
+      addMutation.mutate(data, options);
+    }
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -37,19 +55,7 @@ export default function PlantModal({ plant, onSave, onClose, isSaving, errorText
 
   return (
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <form className="modal" 
-        role="dialog" 
-        aria-modal="true"
-        onSubmit={(e) => {
-            e.preventDefault();
-            onSave({
-                emoji,
-                name: name.trim(),
-                lastWatered,
-                intervalDays: Number(intervalDays),
-                });
-        }}>
-            
+      <form className="modal" role="dialog" aria-modal="true" onSubmit={handleSubmit}>
         <h2 className="modal__title">{plant ? t('form.editTitle') : t('form.addTitle')}</h2>
 
         <div className="field">
@@ -113,9 +119,9 @@ export default function PlantModal({ plant, onSave, onClose, isSaving, errorText
           />
         </label>
 
-        {errorText && (
+        {saveMutation.isError && (
           <p className="banner-error" role="alert">
-            {errorText}
+            {t('plants.saveError')}
           </p>
         )}
 
@@ -123,7 +129,7 @@ export default function PlantModal({ plant, onSave, onClose, isSaving, errorText
           <button type="button" className="btn btn--ghost" onClick={onClose}>
             {t('form.cancel')}
           </button>
-          <button type="submit" className="btn btn--primary" disabled={isSaving}>
+          <button type="submit" className="btn btn--primary" disabled={saveMutation.isPending}>
             {t('form.save')}
           </button>
         </div>

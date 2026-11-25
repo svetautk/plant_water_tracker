@@ -3,14 +3,8 @@ import { useTranslation } from 'react-i18next';
 import Header from './Header';
 import PlantList from './PlantList';
 import PlantModal from './PlantModal';
-import {
-  useAddPlant,
-  useDeletePlant,
-  usePlants,
-  useUpdatePlant,
-  useWaterPlant,
-} from '../hooks/usePlants';
-import type { Plant, PlantInput } from '../types/plant';
+import { useDeletePlant, usePlants, useWaterPlant } from '../hooks/usePlants';
+import type { Plant } from '../types/plant';
 
 type ModalState = { mode: 'closed' } | { mode: 'add' } | { mode: 'edit'; plant: Plant };
 
@@ -19,27 +13,10 @@ export default function HomePage() {
   const [modal, setModal] = useState<ModalState>({ mode: 'closed' });
 
   const plantsQuery = usePlants();
-  const addMutation = useAddPlant();
-  const updateMutation = useUpdatePlant();
   const waterMutation = useWaterPlant();
   const deleteMutation = useDeletePlant();
 
-  const saveMutation = modal.mode === 'edit' ? updateMutation : addMutation;
-
-  const resetAdd = addMutation.reset;
-  const resetUpdate = updateMutation.reset;
-
-  const close = useCallback(() => {
-    setModal({ mode: 'closed' });
-    resetAdd();
-    resetUpdate();
-  }, [resetAdd, resetUpdate]);
-
-  const handleSave = (data: PlantInput) => {
-    const options = { onSuccess: close };
-    if (modal.mode === 'edit') updateMutation.mutate({ id: modal.plant.id, data }, options);
-    else addMutation.mutate(data, options);
-  };
+  const close = useCallback(() => setModal({ mode: 'closed' }), []);
 
   const actionError = waterMutation.isError || deleteMutation.isError;
 
@@ -78,13 +55,7 @@ export default function HomePage() {
       </main>
 
       {modal.mode !== 'closed' && (
-        <PlantModal
-          plant={modal.mode === 'edit' ? modal.plant : undefined}
-          onSave={handleSave}
-          onClose={close}
-          isSaving={saveMutation.isPending}
-          errorText={saveMutation.isError ? t('plants.saveError') : undefined}
-        />
+        <PlantModal plant={modal.mode === 'edit' ? modal.plant : undefined} onClose={close} />
       )}
     </>
   );
