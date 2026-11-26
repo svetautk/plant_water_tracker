@@ -23,6 +23,8 @@ export const loginSchema = z.object({
 
 export type Credentials = z.infer<typeof loginSchema>;
 
+export type User = { id: number; email: string };
+
 export const plantInputSchema = z.object({
   emoji: z.string().min(1).max(PLANT_EMOJI_MAX),
   name: z.string().trim().min(1).max(PLANT_NAME_MAX),

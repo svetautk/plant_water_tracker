@@ -5,7 +5,7 @@ import Header from './Header';
 import PlantList from './PlantList';
 import PlantModal from './PlantModal';
 import { useDeletePlant, usePlants, useWaterPlant } from '../hooks/usePlants';
-import type { Plant } from '../types/plant';
+import type { Plant } from '@plant/shared';
 
 type ModalState = { mode: 'closed' } | { mode: 'add' } | { mode: 'edit'; plant: Plant };
 

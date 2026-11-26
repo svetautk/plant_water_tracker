@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchMe, login, logout, register } from '../api/auth';
-import type { User } from '../types/user';
+import type { User } from '@plant/shared';
 
 export const ME_KEY = ['me'];
 

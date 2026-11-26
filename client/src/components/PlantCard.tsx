@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Droplets, Pencil, Trash2 } from 'lucide-react';
-import type { Plant } from '../types/plant';
+import type { Plant } from '@plant/shared';
 import { getWateringInfo } from '../utils/date';
 import ConfirmModal from './ConfirmModal';
 

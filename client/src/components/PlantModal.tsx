@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Plant, PlantInput } from '../types/plant';
+import type { Plant, PlantInput } from '@plant/shared';
 import { getTodayDateStr } from '../utils/date';
 import { useAddPlant, useUpdatePlant } from '../hooks/usePlants';
 import {

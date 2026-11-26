@@ -1,4 +1,4 @@
-import type { Plant } from '../types/plant';
+import type { Plant } from '@plant/shared';
 
 const MS_IN_DAY = 86_400_000;
 

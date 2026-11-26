@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { Plant } from '../types/plant';
+import type { Plant } from '@plant/shared';
 import PlantCard from './PlantCard';
 import { sortPlants } from '../utils/date';
 

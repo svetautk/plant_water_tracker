@@ -1,5 +1,5 @@
 import { api, ApiError } from './client';
-import type { Credentials, User } from '../types/user';
+import type { Credentials, User } from '@plant/shared';
 
 export const fetchMe = async (): Promise<User | null> => {
   try {

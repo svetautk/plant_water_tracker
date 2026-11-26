@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createPlant, deletePlant, fetchPlants, updatePlant } from '../api/plants';
-import type { Plant, PlantInput } from '../types/plant';
+import type { Plant, PlantInput } from '@plant/shared';
 import { getTodayDateStr } from '../utils/date';
 
 export const PLANTS_KEY = ['plants'];

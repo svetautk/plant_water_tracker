@@ -1,5 +1,5 @@
 import { api } from './client';
-import type { Plant, PlantInput } from '../types/plant';
+import type { Plant, PlantInput } from '@plant/shared';
 
 export const fetchPlants = () => api.get<Plant[]>('/plants');
 
