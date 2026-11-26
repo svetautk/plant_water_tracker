@@ -23,8 +23,8 @@
     "errors": {
       "wrongCredentials": "Wrong email or password",
       "emailTaken": "This email is already registered",
-      "invalid": "Check your email and password",
-      "unknown": "Could not reach the server",
+      "invalid": "Check your email address",
+      "unknown": "Something went wrong, please try again later",
       "passwordMismatch": "Passwords do not match"
     }
   },
