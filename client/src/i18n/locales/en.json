@@ -32,7 +32,8 @@
   "plants": {
     "loadError": "Could not load plants",
     "saveError": "Could not save. Please try again",
-    "actionError": "Action failed. Check your connection and try again"
+    "actionError": "Action failed. Check your connection and try again",
+    "dismiss": "Dismiss"
   },
   "form": {
     "addTitle": "Add plant",

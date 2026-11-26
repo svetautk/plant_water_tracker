@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { X } from 'lucide-react';
 import Header from './Header';
 import PlantList from './PlantList';
 import PlantModal from './PlantModal';
@@ -19,6 +20,11 @@ export default function HomePage() {
   const close = useCallback(() => setModal({ mode: 'closed' }), []);
 
   const actionError = waterMutation.isError || deleteMutation.isError;
+
+  const dismissActionError = () => {
+    waterMutation.reset();
+    deleteMutation.reset();
+  };
 
   const renderContent = () => {
     if (plantsQuery.isPending) {
@@ -47,9 +53,18 @@ export default function HomePage() {
       <Header onAdd={() => setModal({ mode: 'add' })} />
       <main className="main">
         {actionError && (
-          <p className="banner-error" role="alert">
-            {t('plants.actionError')}
-          </p>
+          <div className="banner-error banner-error--floating" role="alert">
+            <p className="banner-error__text">{t('plants.actionError')}</p>
+            <button
+              type="button"
+              className="icon-btn banner-error__close"
+              onClick={dismissActionError}
+              aria-label={t('plants.dismiss')}
+              title={t('plants.dismiss')}
+            >
+              <X size={18} />
+            </button>
+          </div>
         )}
         {renderContent()}
       </main>

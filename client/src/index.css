@@ -428,6 +428,36 @@ input {
   font-size: 0.9rem;
 }
 
+.banner-error--floating {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  width: calc(100% - 32px);
+  max-width: 832px;
+  margin: 0;
+  border: 1px solid var(--overdue-fg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.banner-error__text {
+  flex: 1;
+  margin: 0;
+}
+
+.banner-error__close {
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.banner-error__close:hover {
+  color: inherit;
+  background: rgb(0 0 0 / 0.06);
+}
+
 .auth__switch {
   margin: 16px 0 0;
   text-align: center;
