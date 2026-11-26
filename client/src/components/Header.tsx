@@ -9,8 +9,6 @@ interface Props {
 
 export default function Header({ onAdd }: Props) {
   const { t } = useTranslation();
-  // Хук вызываем прямо здесь, а не передаём onLogout пропсом из App:
-  // кеш TanStack Query доступен любому компоненту, "прокидывать" ничего не нужно.
   const logoutMutation = useLogout();
 
   return (

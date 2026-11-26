@@ -77,7 +77,6 @@ export default function PlantModal({ plant, onClose }: Props) {
         <label className="field">
           <span className="field__label field__label--row">
             {t('form.name')}
-            {/* Счётчик: краснеет, когда достигнут лимит */}
             <span className={`field__counter ${name.length >= PLANT_NAME_MAX ? 'field__counter--limit' : ''}`}>
               {name.length}/{PLANT_NAME_MAX}
             </span>
