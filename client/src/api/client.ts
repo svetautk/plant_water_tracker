@@ -21,7 +21,7 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     throw new ApiError(response.status, response.statusText);
   }
 
-  // 204 No Content (удаление, выход), если тела нет, TS не пропустит, поэтому возвращаем undefined как T
+  // 204 No Content (удаление, выход), если тела нет, возвращаем undefined как T
   if (response.status === 204) {
     return undefined as T;
   }
